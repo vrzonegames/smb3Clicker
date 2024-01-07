@@ -95,13 +95,15 @@
                 <br> 
                 <div class="clickerContainer unselectable">
                     <img src="im/mario.png" onclick="addToScore(clickingpower)">
-                </div>
-            </center>
+              </div>
+            <button onclick="savegame();">Save Gmae</button>
+        </center>
 
-            <div class="sectionFooter">
-                <h5>smb3Clicker</h5>
-            </div>
+        <div class="sectionFooter">
+            <h5>Oreo Clicker</h5>
+            <button onclick="resetgame();">Reset Game</button>
         </div>
+    </div>
 
     <div class="sectionRight">
         <table class="shopButton unselectable" onclick="buyCursor()">
@@ -109,7 +111,7 @@
                 <td id="image"><img src="im/Cursorv4.png"></td>
                 <td id="nameAndCost">
                     <p>Cursor</p>
-                    <P><span id="cursorcost">15</span> mario</P>
+                    <P><span id="cursorcost">15</span> oreo</P>
                 </td>
                 <td id="amount"><span id="cursors">0</span></td>
             </tr>
@@ -119,7 +121,7 @@
                 <td id="image"><img src="im/Grandma.png"></td>
                 <td id="nameAndCost">
                     <p>Grandma</p>
-                    <P><span id="Grandmacost">100</span> mario</P>
+                    <P><span id="Grandmacost">100</span> oero</P>
                 </td>
                 <td id="amount"><span id="Grandmas">0</span></td>
             </tr>
@@ -129,83 +131,147 @@
                 <td id="image"><img src="im/oven.png"></td>
                 <td id="nameAndCost">
                     <p>oven</p>
-                    <P><span id="ovencost">1000</span> mario</P>
+                    <P><span id="ovencost">1000</span> oero</P>
                 </td>
                 <td id="amount"><span id="ovens">0</span></td>
             </tr>
         </table>
     </div>
 
-        <script>
-            var score = 0;
-            var clickingpower = 1;
+    <script>
+        var score = 0;
+        var clickingpower = 1;
 
-            var cursorCost = 15;
-            var cursors = 0;
-            var Grandmacost = 100;
-            var Grandmas = 0;
-            var ovencost = 1000
-            var ovens = 0
+        var cursorCost = 15;
+        var cursors = 0;
+        var Grandmacost = 100;
+        var Grandmas = 0;
+        var ovencost = 1000
+        var ovens = 0
 
-            function buyCursor () {
-                if (score >= cursorCost) { 
-                    score = score - cursorCost;
-                    cursors = cursors + 1;
-                    cursorCost = Math.round(cursorCost * 1.15);
+        function buyCursor() {
+            if (score >= cursorCost) {
+                score = score - cursorCost;
+                cursors = cursors + 1;
+                cursorCost = Math.round(cursorCost * 1.15);
 
-                    document.getElementById("score").innerHTML = score;
-                    document.getElementById("cursorcost").innerHTML = cursorCost;
-                    document.getElementById("cursors").innerHTML = cursors;
-                    updateScorepersecond();
-
-                }
-            }
-            function buyGrandma () {
-                if (score >= Grandmacost) { 
-                    score = score - Grandmacost;
-                    Grandmas = Grandmas + 1;
-                    Grandmacost = Math.round(Grandmacost * 1.15);
-
-                    document.getElementById("score").innerHTML = score;
-                    document.getElementById("Grandmacost").innerHTML = Grandmacost;
-                    document.getElementById("Grandmas").innerHTML = Grandmas;
-                    updateScorepersecond();
-
-                }
-            }
-
-            function buyoven () {
-                if (score >= ovencost) { 
-                    score = score - ovencost;
-                    ovens = ovens + 1;
-                    ovencost = Math.round(ovencost * 1.15);
-
-                    document.getElementById("score").innerHTML = score;
-                    document.getElementById("ovencost").innerHTML = ovencost;
-                    document.getElementById("ovens").innerHTML = ovens;
-                    updateScorepersecond();
-
-                }
-            }
-
-            function addToScore (amount) {
-                score = score + amount;
                 document.getElementById("score").innerHTML = score;
-            }
+                document.getElementById("cursorcost").innerHTML = cursorCost;
+                document.getElementById("cursors").innerHTML = cursors;
+                updateScorepersecond();
 
-            function updateScorepersecond() {
-                scorepersecond = cursors + Grandmas * 5 + ovens * 70;
-                document.getElementById("scorepersecond").innerHTML = scorepersecond;
             }
+        }
 
-            setInterval(function() {
-                score = score + cursors;
-                score = score + Grandmas * 5;
-                score = score + ovens * 70;
+        function buyGrandma() {
+            if (score >= Grandmacost) {
+                score = score - Grandmacost;
+                Grandmas = Grandmas + 1;
+                Grandmacost = Math.round(Grandmacost * 1.15);
+
                 document.getElementById("score").innerHTML = score;
+                document.getElementById("Grandmacost").innerHTML = Grandmacost;
+                document.getElementById("Grandmas").innerHTML = Grandmas;
+                updateScorepersecond();
 
-                document.title = score + " mario - smb3Clicker";
-            }, 1000) ; // 1000ms = 1 second
-        </script>
-    </body>
+            }
+        }
+
+        function buyoven() {
+            if (score >= ovencost) {
+                score = score - ovencost;
+                ovens = ovens + 1;
+                ovencost = Math.round(ovencost * 1.15);
+
+                document.getElementById("score").innerHTML = score;
+                document.getElementById("ovencost").innerHTML = ovencost;
+                document.getElementById("ovens").innerHTML = ovens;
+                updateScorepersecond();
+
+            }
+        }
+
+        function addToScore(amount) {
+            score = score + amount;
+            document.getElementById("score").innerHTML = score;
+        }
+
+        function updateScorepersecond() {
+            scorepersecond = cursors + Grandmas * 5 + ovens * 70;
+            document.getElementById("scorepersecond").innerHTML = scorepersecond;
+        }
+
+        function loadgame() {
+            var savedGame = JSON.parse(localStorage.getItem("gameSave"));
+            if (typeof savedGame.score !== "undefined") score = savedGame.score;
+            if (typeof savedGame.clickingpower !== "undefined") clickingpower = savedGame.clickingpower;
+            if (typeof savedGame.cursorCost !== "undefined") cursorCost = savedGame.cursorCost;
+            if (typeof savedGame.cursors !== "undefined") cursors = savedGame.cursors;
+            if (typeof savedGame.Grandmacost !== "undefined") Grandmacost = savedGame.Grandmacost;
+            if (typeof savedGame.Grandmas !== "undefined") Grandmas = savedGame.Grandmas;
+            if (typeof savedGame.ovencost !== "undefined") ovencost = savedGame.ovencost;
+            if (typeof savedGame.ovens !== "undefined") ovens = savedGame.ovens;
+        }
+
+
+        function savegame() {
+            var gameSave = {
+                score: score,
+                clickingpower: clickingpower,
+                cursorCost: cursorCost,
+                cursors: cursors,
+                Grandmacost: Grandmacost,
+                Grandmas: Grandmas,
+                ovencost: ovencost,
+                ovens: ovens
+            };
+            localStorage.setItem("gameSave", JSON.stringify(gameSave));
+        }
+
+        function resetgame() {
+            if (confirm("Are you sure you want to reset your game")) {
+                var gameSave = {};
+                localStorage.setItem("gameSave", JSON.stringify(gameSave));
+                location.reload();
+            }
+        }
+
+
+
+
+
+        window.onload = function() {
+            loadgame();
+            updateScorepersecond();
+            document.getElementById("score").innerHTML = score;
+            document.getElementById("cursorcost").innerHTML = cursorCost;
+            document.getElementById("cursors").innerHTML = cursors;
+            document.getElementById("Grandmacost").innerHTML = Grandmacost
+            document.getElementById("Grandmas").innerHTML = Grandmas;
+            document.getElementById("ovencost").innerHTML = ovencost;
+            document.getElementById("ovens").innerHTML = ovens;
+        };
+
+        setInterval(function() {
+            score = score + cursors;
+            score = score + Grandmas * 5;
+            score = score + ovens * 70;
+            document.getElementById("score").innerHTML = score;
+
+            document.title = score + " Oreo - Oreo Clicker";
+        }, 1000); // 1000ms = 1 second
+
+        setInterval(function() {
+            savegame();
+        }, 30000);
+
+        document.addEventListener("keydown", function(event) {
+            if (event.ctrlKey && event.which == 83) { // ctrl = s
+                event.preventDefault();
+                savegame();
+            }
+        }, false);
+    </script>
+</body>
+
 </HTML>
